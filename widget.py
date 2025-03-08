@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
 
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QApplication, QWidget, QMessageBox
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -29,7 +29,7 @@ class Widget(QWidget):
                 email_account = self.ui.EmailAccount.toPlainText().strip()
                 password_account = self.ui.PasswordAccount.toPlainText().strip()
                 if not site_name and not email_account and not password_account:
-                    print("No se ha ingresado ninguna cuenta")
+                    self.show_message("Advertencia", "No se han ingresado datos")
                     return
                 try:
                     with open("accounts.json", "r") as accountsfile:
@@ -46,11 +46,17 @@ class Widget(QWidget):
                     self.ui.SiteAccount.clear()
                     self.ui.EmailAccount.clear()
                     self.ui.PasswordAccount.clear()
+                    self.show_message("Correcto", "Se ha agregado la cuenta al archivo accounts.json")
                 except Exception as jsone:
-                    print(f"Exepcion en addAccount {jsone}")
+                    pass
             except Exception as jsone:
-                print(jsone)
-
+                pass
+    def show_message(self, titulo, mensaje):
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle(titulo)
+        msg_box.setText(mensaje)
+        msg_box.setIcon(QMessageBox.Information)
+        msg_box.exec()
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = Widget()
